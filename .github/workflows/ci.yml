@@ -2,9 +2,9 @@ name: CI - DataOps Ingestion Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build-and-test:
@@ -21,6 +21,9 @@ jobs:
         run: |
           docker build -t dataops-ingestion:ci .
 
-      - name: Run container health check
+      - name: Run container health check (CI-safe)
         run: |
-          docker run --rm dataops-ingestion:ci python -m app.healthcheck
+          docker run --rm \
+            -e CI=true \
+            dataops-ingestion:ci \
+            python -m app.healthcheck
